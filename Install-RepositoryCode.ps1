@@ -18,9 +18,10 @@ param (
 
 ## Update Git EnvPath variable
 $GitPath = [System.String]";C:\Program Files\Git\bin\;C:\Program Files\Git\cmd\";
-if (-Not ([System.String]$env:Path -like "*" + $GitPath + "*"))
+if (-not ([System.Environment]::GetEnvironmentVariable("Path", "User") -like "*$GitPath*"))
 {
-    $env:Path += $GitPath;
+    $newPath = [System.Environment]::GetEnvironmentVariable("Path", "User") + ";$GitPath"
+    [System.Environment]::SetEnvironmentVariable("Path", $newPath, "User")
     Write-Output "Added Git to the PATH environment variable. Please restart the shell to use the new PATH."
     Exit
 }
