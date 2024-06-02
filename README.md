@@ -1,98 +1,23 @@
-# **Contribute**
-If you want to contribute, please, create an issue or  PR on the main project https://github.com/fscpscollaborative/fscps
+# Simple GitHub repository template for D365 FSCM projects
 
-# D365FSC Development user guide 
+This repository template is a starting point for D365 FSCM Extension projects. It covers the repository setup and running a build on the repository. More advanced scenarios are covered by other FSC-PS templates.
+
+To learn in general on how to set up this repository template, visit [FSC-PS for GitHub](https://github.com/fscpscollaborative/fscps).
+
+## Template specific instructions
+
+[FSC-PS for GitHub](https://github.com/fscpscollaborative/fscps) provides you with general information on how to set up this and other FSC-PS templates. In addition, there is some setup specific to D365 FSC Extension projects. 
+
+### Install the repository code
+
+To make the D365 FSCM extensions from this repository available in the D365 FSCM application of a development environment, the repository needs to be installed in a particular way. To do this, run [Install-RepositoryCode.ps1](Install-RepositoryCode.ps1) as follows:
+- Connect to your development environment using Remote Desktop.
+- Download the [Install-RepositoryCode.ps1](Install-RepositoryCode.ps1) script.
+- Run the script in a PowerShell session with administrator permissions.
+- The script will ask for a name and email address for the Git configuration.
+- It will also ask for the URL of the repository to clone. You can find that URL on GitHub by clicking the green "Code" button and copying the URL.
 
 
-### Generate GitHub PAT(Personal Access Token)
+### Add a D365 FSCM module
 
-- Login to your GitHub account and open Settings 
-![](https://raw.githubusercontent.com/fscpscollaborative/fscps/main/Scenarios/images/fsc_dev_a.png)
-
-- Developer Settings 
-![](https://raw.githubusercontent.com/fscpscollaborative/fscps/main/Scenarios/images/fsc_dev_b.png)
-
-- Personal Access Token -> Generate New Token 
- ![](https://raw.githubusercontent.com/fscpscollaborative/fscps/main/Scenarios/images/fsc_dev_c.png)
-
- ![](https://raw.githubusercontent.com/fscpscollaborative/fscps/main/Scenarios/images/fsc_dev_d.png)
-
-- Copy and save your PAT somewhere and click the Authorize SSO 
-![](https://raw.githubusercontent.com/fscpscollaborative/fscps/main/Scenarios/images/fsc_dev_e.png)
-
-### Map the repository code
-- Log in to your devbox and run the Powershell ISE with administrator permissions.
-- Change the variables values and execute the folowing powershell code.
-
-~~~javascript
-$GitGlobalUserName  = "Oleksandr Nikolaiev"
-$GitGlobalEmail     = "Oleksandr.Nikolaiev@contosoinc.com"
-$GitFnORepoURL      = "https://github.com/ContosoInc/ContesoExt-dynamics-365-FO.git"
-#
-# Retrieve the FnO deployment location 
-#
-function Get-FnODeploymentFolder
-{
-    if (Test-Path -Path K:\AosService)
-    {
-       return "K:\AosService"
-    }
-    elseif (Test-Path -Path C:\AosService)
-    {
-       return "C:\AosService"
-    }
-    elseif (Test-Path -Path J:\AosService)
-    {
-       return "J:\AosService"
-    }
-    elseif (Test-Path -Path I:\AosService)
-    {
-       return "I:\AosService"
-    }
-    else
-    {
-      throw "Cannot find the AOSService folder in any known location"
-    }
-}
-
-#Update Git EnvPath variable
-$GitPath = [System.String]";C:\Program Files\Git\bin\;C:\Program Files\Git\cmd\";
-if(-Not ([System.String]$env:Path -like "*" + $GitPath + "*"))
-{
-    $env:Path += $GitPath;
-}
-
-$LocalFnODeploymentFolder = Get-FnODeploymentFolder
-cd $LocalFnODeploymentFolder
-if( -Not (Test-Path  ".git"))
-{
-    git clone -b main $GitFnORepoURL tmp
-    mv tmp/.git $LocalFnODeploymentFolder
-    rmdir tmp -Recurse
-    git config --global user.name $GitGlobalUserName
-    git config --global user.email $GitGlobalEmail
-    git reset --hard HEAD
-    git fetch 
-    git pull
-}
-
-~~~
-
-Paste the generated PAT into the popup GitHub window.
-
-### Configure VisualStudio
-- Open VisualStudio and select “Open a Local Folder”
-
-![](https://raw.githubusercontent.com/fscpscollaborative/fscps/main/Scenarios/images/fsc_dev_f.png)
-
-- Find the AOSService folder and click select 
-
-![](https://raw.githubusercontent.com/fscpscollaborative/fscps/main/Scenarios/images/fsc_dev_g.png)
-
-- Go to Tools->Options 
-
-![](https://raw.githubusercontent.com/fscpscollaborative/fscps/main/Scenarios/images/fsc_dev_h.png)
-
-- Set Projects locations to AOSService/VSSProjects folder and click OK button. 
-
-![](https://raw.githubusercontent.com/fscpscollaborative/fscps/main/Scenarios/images/fsc_dev_i.png)
+Now you can use Visual Studio as you normally would to create a new D365 FSCM module or install an existing one. Once that is done, the source code files of the module will appear as new file changes in Git. Those changes can be [committed](https://learn.microsoft.com/en-us/visualstudio/version-control/git-make-commit) and [pushed](https://learn.microsoft.com/en-us/visualstudio/version-control/git-push-remote) from within Visual Studio to the repository on GitHub.

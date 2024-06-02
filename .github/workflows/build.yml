@@ -54,14 +54,6 @@ jobs:
         with:
           version: ${{ inputs.version }}
           
-      - name: Check for updates to FSC-PS system files
-        uses: fscpscollaborative/fscps.gh/CheckForUpdates@v2.1
-        continue-on-error: true
-        with:
-          type: ${{ steps.ReadSettings.outputs.type }}
-          settingsJson: ${{ env.Settings }}
-          secretsJson: ${{ env.RepoSecrets }}
-
    Build:
     needs: [ Initialization ]
     runs-on: ${{ fromJson(needs.Initialization.outputs.githubRunner) }}
@@ -78,13 +70,6 @@ jobs:
         uses: fscpscollaborative/fscps.gh/ReadSettings@v2.1
         with:
           version: ${{ matrix.version }}
-          
-      - name: Read secrets
-        uses: fscpscollaborative/fscps.gh/ReadSecrets@v2.1
-        env:
-          secrets: ${{ toJson(secrets) }}       
-        with:
-          settingsJson: ${{ env.Settings }}
           
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
@@ -120,13 +105,6 @@ jobs:
       - name: Read settings
         uses: fscpscollaborative/fscps.gh/ReadSettings@v2.1
 
-      - name: Read secrets
-        uses: fscpscollaborative/fscps.gh/ReadSecrets@v2.1
-        env:
-          secrets: ${{ toJson(secrets) }}
-        with:
-          settingsJson: ${{ env.Settings }}
-          
       - name: Finalize the workflow
         id: PostProcess
         uses: fscpscollaborative/fscps.gh/WorkflowPostProcess@v2.1

@@ -1,7 +1,7 @@
 {
     "type":"FSCM",
-    "packageName": "ContosoExtension",
-    "buildVersion": "10.0.29",
+    "packageName": "D365FSCMExtension",
+    "buildVersion": "10.0.39",
     "ciBranches": "main,release",
     "useLocalNuGetStorage":true,
     "deploymentScheduler":false
